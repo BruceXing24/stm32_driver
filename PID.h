@@ -1,7 +1,3 @@
-//
-// Created by Kaijun on 2020/9/11.
-//
-
 #ifndef HEIMAROBOTV4_PID_H
 #define HEIMAROBOTV4_PID_H
 
@@ -14,21 +10,21 @@ public:
     float kd;
 
     float pwm = 0;
-    // ÉÏÒ»´ÎµÄÎó²î
+    // ä¸Šä¸€æ¬¡çš„è¯¯å·®
     float prevError;
-    // »ı·Ö
+    // ç§¯åˆ†
     float intergral;
-    // Î¢·Ö
+    // å¾®åˆ†
     float derivative;
     /**
-     * pidµÄ¼ÆËãº¯Êı
-     * @param target  Ä¿±êÖµ
-     * @param current µ±Ç°Öµ
+     * pidçš„è®¡ç®—å‡½æ•°
+     * @param target  ç›®æ ‡å€¼
+     * @param current å½“å‰å€¼
      * @return  pwm
      */
     float compute(float target,float current);
     /**
-     *  ÖØÖÃËùÓĞµÄÎó²î: µ±ÉèÖÃµÄËÙ¶È ºÍ ÉÏÒ»´Î²»Ò»Ñù
+     *  é‡ç½®æ‰€æœ‰çš„è¯¯å·®: å½“è®¾ç½®çš„é€Ÿåº¦ å’Œ ä¸Šä¸€æ¬¡ä¸ä¸€æ ·
      */
     void reset();
 
