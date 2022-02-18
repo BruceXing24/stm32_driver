@@ -1,7 +1,3 @@
-//
-// Created by Kaijun on 2020/9/11.
-//
-
 #ifndef HEIMAROBOTV4_ROBOT_H
 #define HEIMAROBOTV4_ROBOT_H
 
@@ -10,12 +6,12 @@
 extern "C" {
 #endif
 /**
- * 初始化的操作
+ * 鍒濆鍖栫殑鎿嶄綔
  */
 void HeimarobotInit();
 
 /**
- * Tick机器人心脏的跳动
+ * Tick鏈哄櫒浜哄績鑴忕殑璺冲姩
  */
 void HeimarobotTick();
 
