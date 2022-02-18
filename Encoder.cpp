@@ -1,7 +1,3 @@
-//
-// Created by Kaijun on 2020/9/11.
-//
-
 #include "Encoder.h"
 Encoder::Encoder(TIM_HandleTypeDef *tim,uint16_t channel,int direction){
     this->tim = tim;
@@ -10,16 +6,16 @@ Encoder::Encoder(TIM_HandleTypeDef *tim,uint16_t channel,int direction){
 }
 
 void Encoder::init(){
-    // Æô¶¯¶¨Ê±Æ÷
+    // å¯åŠ¨å®šæ—¶å™¨
     HAL_TIM_Encoder_Start(this->tim,this->channel);
 }
 
 short Encoder::read(){
-    // ¶ÁÈ¡±àÂëÆ÷Êı¾İ
+    // è¯»å–ç¼–ç å™¨æ•°æ®
     short count = __HAL_TIM_GET_COUNTER(this->tim);
-    // Í¨¹ıdirectionµ÷Õû±àÂëÆ÷µÄ·½Ïò
+    // é€šè¿‡directionè°ƒæ•´ç¼–ç å™¨çš„æ–¹å‘
     count *= this->direction;
-    // ¶ÁÍêÖ®ºóÇå¿ÕÊı¾İ
+    // è¯»å®Œä¹‹åæ¸…ç©ºæ•°æ®
     __HAL_TIM_SET_COUNTER(this->tim,0);
     return count;
 }
