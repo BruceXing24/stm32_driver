@@ -1,6 +1,3 @@
-//
-// Created by Kaijun on 2020/9/11.
-//
 
 #ifndef HEIMAROBOTV4_ENCODER_H
 #define HEIMAROBOTV4_ENCODER_H
