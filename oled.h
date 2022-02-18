@@ -1,6 +1,3 @@
-//
-// Created by Kaijun on 2020/9/11.
-//
 #ifndef __OLED_H
 #define __OLED_H
 
@@ -12,7 +9,7 @@ extern "C" {
 
 #define u32 uint32_t
 #define u8 uint8_t
-//-----------------OLED¶Ë¿Ú¶¨Òå----------------
+//-----------------OLEDç«¯å£å®šä¹‰----------------
 #define OLED_RST_Clr() HAL_GPIO_WritePin(GPIOE,GPIO_PIN_7,GPIO_PIN_RESET) //PEout(7)=0   //RST
 #define OLED_RST_Set() HAL_GPIO_WritePin(GPIOE,GPIO_PIN_7,GPIO_PIN_SET) //PEout(7)=1   //RST
 
@@ -25,10 +22,10 @@ extern "C" {
 #define OLED_SDIN_Clr() HAL_GPIO_WritePin(GPIOE,GPIO_PIN_6,GPIO_PIN_RESET) // PEout(6)=0   //SDA
 #define OLED_SDIN_Set() HAL_GPIO_WritePin(GPIOE,GPIO_PIN_6,GPIO_PIN_SET) // PEout(6)=1   //SDA
 
-#define OLED_CMD  0    //Ğ´ÃüÁî
-#define OLED_DATA 1    //Ğ´Êı¾İ
+#define OLED_CMD  0    //å†™å‘½ä»¤
+#define OLED_DATA 1    //å†™æ•°æ®
 
-//OLED¿ØÖÆÓÃº¯Êı
+//OLEDæ§åˆ¶ç”¨å‡½æ•°
 void OLED_WR_Byte(u8 dat, u8 cmd);
 
 void OLED_Display_On(void);
