@@ -1,7 +1,3 @@
-//
-// Created by Kaijun on 2020/9/11.
-//
-
 #ifndef HEIMAROBOTV4_WHEEL_H
 #define HEIMAROBOTV4_WHEEL_H
 
@@ -16,7 +12,7 @@ public:
     Motor* motor;
     Encoder* encoder;
     PID* pid;
-    // ¸üĞÂµÄÊ±¼ä
+    // æ›´æ–°çš„æ—¶é—´
     uint32_t vel_update_time;
     float vel;
     float targetVel;
@@ -26,8 +22,8 @@ public:
     void init();
     void tick();
     /**
-     * ÉèÖÃÂÖ×ÓµÄ×ªËÙ
-     * @param vel  µ¥Î»m/s
+     * è®¾ç½®è½®å­çš„è½¬é€Ÿ
+     * @param vel  å•ä½m/s
      */
     void setVel(float vel);
     float getVel();
