@@ -1,7 +1,3 @@
-//
-// Created by Kaijun on 2020/9/11.
-//
-
 #include "Motor.h"
 #include <math.h>
 #include "config.h"
@@ -25,13 +21,13 @@ void Motor::init() {
     __HAL_TIM_SET_COMPARE(this->tim,this->channel,0);
 }
 /**
- * ¿ØÖÆµç»ú×ª¶¯
+ * æŽ§åˆ¶ç”µæœºè½¬åŠ¨
  * @param pwm
  */
 void Motor::spin(int pwm) {
 
 
-    // pwmÏÞÖÆ·¶Î§
+    // pwmé™åˆ¶èŒƒå›´
     if(pwm>MAX_PWM){
         pwm = MAX_PWM;
     }else if(pwm < MIN_PWM){
@@ -42,14 +38,14 @@ void Motor::spin(int pwm) {
 
     pwm*=this->direction;
 
-    // ËÀÇø¿ØÖÆ,Èç¹û±¾´ÎµÄpwm ºÍÉÏÒ»´ÎµÄpwm·½Ïò²»Ò»ÖÂ
+    // æ­»åŒºæŽ§åˆ¶,å¦‚æžœæœ¬æ¬¡çš„pwm å’Œä¸Šä¸€æ¬¡çš„pwmæ–¹å‘ä¸ä¸€è‡´
     if(pwm*lastPwm < 0){
         HAL_GPIO_WritePin(this->portA,this->pinA,GPIO_PIN_RESET);
         HAL_GPIO_WritePin(this->portB,this->pinB,GPIO_PIN_RESET);
     }
 
     lastPwm = pwm;
-    if(pwm>0){ // Õý×ª
+    if(pwm>0){ // æ­£è½¬
         HAL_GPIO_WritePin(this->portA,this->pinA,GPIO_PIN_SET);
         HAL_GPIO_WritePin(this->portB,this->pinB,GPIO_PIN_RESET);
     }else if(pwm < 0){
