@@ -1,6 +1,3 @@
-//
-// Created by Kaijun on 2020/9/11.
-//
 #include "robot.h"
 #include <cstdio>
 #include "stm32f1xx_hal.h"
@@ -20,32 +17,30 @@ void show_oled();
 short param_kp = KP*10;
 short param_ki = KI*10;
 short param_kd = KD*10;
-// ´´½¨ÊÖ±ú¶ÔÏó
-PSTwo psTwo(PS_DI_PORT,PS_DI_PIN,PS_DO_PORT,PS_DO_PIN,PS_CS_PORT,PS_CS_PIN,PS_CLK_PORT,PS_CLK_PIN,PS_TIM);
 //Wheel2Car car;
 Ackermann car;
 //Wheel4Car car;
 uint8_t buffer[10]={0};
 
-// ½«ÏÂÎ»»úµÄËùÓĞÊı¾İ·¢ËÍ³öÈ¥
+// å°†ä¸‹ä½æœºçš„æ‰€æœ‰æ•°æ®å‘é€å‡ºå»
 void publish_data();
-// Êı¾İÃ¿¸ôÒ»¶ÎÊ±¼ä¶ÔÍâ·¢ËÍ
+// æ•°æ®æ¯éš”ä¸€æ®µæ—¶é—´å¯¹å¤–å‘é€
 uint32_t publish_time;
 
 /**
- * ³õÊ¼»¯µÄ²Ù×÷
+ * åˆå§‹åŒ–çš„æ“ä½œ
  */
 void HeimarobotInit(){
     printf("heimarobot init..\r\n");
 
-    // ³õÊ¼»¯´®¿ÚÍ¨Ñ¶
+    // åˆå§‹åŒ–ä¸²å£é€šè®¯
     common_uart_init();
 
     //psTwo.init();
-    // ³õÊ¼»¯MPU_9250
+    // åˆå§‹åŒ–MPU_9250
     MPU9250_Init();
 
-    // ³õÊ¼»¯OLED
+    // åˆå§‹åŒ–OLED
     OLED_Init();
 
     car.init();
@@ -64,7 +59,7 @@ void HeimarobotInit(){
 int flag=1;
 int32_t change_time = 0;
 /**
- * Tick»úÆ÷ÈËĞÄÔàµÄÌø¶¯
+ * Tickæœºå™¨äººå¿ƒè„çš„è·³åŠ¨
  */
 void HeimarobotTick(){
 //    printf("heimarobot tick..\r\n");
@@ -104,7 +99,7 @@ void show_oled(){
     OLED_ShowString(0,24,data3);
 
 
-    // ÏÔÊ¾100±¶µÄPID
+    // æ˜¾ç¤º100å€çš„PID
     OLED_ShowString(0,48,(uint8_t*)"P:");
     OLED_ShowNumber(12,48,param_kp,3,12);
 
@@ -115,7 +110,7 @@ void show_oled(){
     OLED_ShowNumber(84,48,param_kd,3,12);
 
 
-    // Ë¢ĞÂÆÁÄ»
+    // åˆ·æ–°å±å¹•
     OLED_Refresh_Gram();
 }
 
@@ -124,25 +119,25 @@ void show_oled(){
 
 
 void publish_data(){
-    // °´ÕÕÒ»¶¨µÄÆµÂÊ¶ÔÍâ·¢ËÍÊı¾İ
+    // æŒ‰ç…§ä¸€å®šçš„é¢‘ç‡å¯¹å¤–å‘é€æ•°æ®
     if(HAL_GetTick() - publish_time < 1000/IMU_PUSH_RATE){
         return ;
     }
     publish_time = HAL_GetTick();
 
-    // ÎÂ¶È
+    // æ¸©åº¦
     short temp = MPU_Get_Temperature();
-    // ÈıÖá¼ÓËÙ¶È
+    // ä¸‰è½´åŠ é€Ÿåº¦
     short ax,ay,az = 0;
     MPU_Get_Accelerometer(&ax,&ay,&az);
-    // ÈıÖá½ÇËÙ¶È
+    // ä¸‰è½´è§’é€Ÿåº¦
     short gx,gy,gz = 0;
     MPU_Get_Gyroscope(&gx,&gy,&gz);
-    // ÈıÖáµØ´ÅÊı¾İ
+    // ä¸‰è½´åœ°ç£æ•°æ®
     short mx,my,mz = 0;
     MPU_Get_Magnetometer(&mx,&my,&mz);
 
-    // ½«Ğ¡³µµÄÏßËÙ¶È ,½ÇËÙ¶È  ·Å´ó1000±¶µÄÄ¿µÄÊÇÎªÁË¼õÉÙÊı¾İÁ¿ , ·½±ã´¦Àí
+    // å°†å°è½¦çš„çº¿é€Ÿåº¦ ,è§’é€Ÿåº¦  æ”¾å¤§1000å€çš„ç›®çš„æ˜¯ä¸ºäº†å‡å°‘æ•°æ®é‡ , æ–¹ä¾¿å¤„ç†
     short xVel = (short)(car.getXVel()*1000);
     short angularVel = (short)(car.getAngularVel()*1000);
 
@@ -154,32 +149,32 @@ void publish_data(){
     protocol->head1 = FLAG_HEAD1;
     protocol->type = 0x03;
     protocol->len = protocolSize - 4;
-    // ÎÂ¶È
+    // æ¸©åº¦
     protocol->temperature = temp;
-    // ¼ÓËÙ¶È
+    // åŠ é€Ÿåº¦
     protocol->ax = ax;
     protocol->ay = ay;
     protocol->az = az;
-    // ÍÓÂİÒÇµÄ½ÇËÙ¶È
+    // é™€èºä»ªçš„è§’é€Ÿåº¦
     protocol->gx = gx;
     protocol->gy = gy;
     protocol->gz = gz;
-    // µØ´Å
+    // åœ°ç£
     protocol->mx = mx;
     protocol->my = my;
     protocol->mz = mz;
 
-    // ÏßËÙ¶ÈºÍ½ÇËÙ¶È
+    // çº¿é€Ÿåº¦å’Œè§’é€Ÿåº¦
     protocol->velocity = xVel;
     protocol->angular = angularVel;
 
 
     protocol->tail = FLAG_TAIL;
 
-    //  ½«ËÙ¶È·¢ËÍ³öÈ¥
+    //  å°†é€Ÿåº¦å‘é€å‡ºå»
     common_uart_send((uint8_t*)protocol,protocolSize);
 
-    // ÇĞ¼Ç new ³öÀ´µÄ¶«Î÷Ò»¶¨ÒªÉ¾³ı
+    // åˆ‡è®° new å‡ºæ¥çš„ä¸œè¥¿ä¸€å®šè¦åˆ é™¤
     delete protocol;
 }
 
@@ -188,42 +183,42 @@ void publish_data(){
 
 
 /**
- * ½ÓÊÕÍâ²¿·¢ËÍ¹ıÀ´µÄÊı¾İ
+ * æ¥æ”¶å¤–éƒ¨å‘é€è¿‡æ¥çš„æ•°æ®
  * @param receive_buf
  * @param receive_len
  */
 void common_uart_idle_callback(uint8_t receive_buf[],uint16_t receive_len){
 
-    //                Àà  ³¤  µÍ   ¸ß  µÍ  ¸ß
+    //                ç±»  é•¿  ä½   é«˜  ä½  é«˜
     // [0xce, 0xfa, 0x05, 4, 250, 0, 244, 1]
     uint8_t i = 0;
     while(i < receive_len){
-        // ÏÈÕÒµ½Ö¡Í·0
+        // å…ˆæ‰¾åˆ°å¸§å¤´0
         if(receive_buf[i] == FLAG_HEAD0){
-            // ÔÙÕÒÖ¡Í·1
+            // å†æ‰¾å¸§å¤´1
             if(receive_buf[i+1] == FLAG_HEAD1){
-                // Èô½øµ½ÕâÀïÀ´ÁË,ËµÃ÷Ö¡Í·ÍêÈ«Æ¥Åä
-                // »ñÈ¡ÀàĞÍ
+                // è‹¥è¿›åˆ°è¿™é‡Œæ¥äº†,è¯´æ˜å¸§å¤´å®Œå…¨åŒ¹é…
+                // è·å–ç±»å‹
                 uint8_t type = receive_buf[i+2];
-                if(type == 0x05){  // ÅĞ¶ÏÊÇ·ñÎªÉÏÎ»»ú·¢ËÍ¹ıÀ´µÄËÙ¶ÈĞÅÏ¢
-                    // »ñÈ¡Êı¾İ³¤¶È
+                if(type == 0x05){  // åˆ¤æ–­æ˜¯å¦ä¸ºä¸Šä½æœºå‘é€è¿‡æ¥çš„é€Ÿåº¦ä¿¡æ¯
+                    // è·å–æ•°æ®é•¿åº¦
                     uint8_t len = receive_buf[i+3];
-                    // ÅĞ¶ÏÊÇ·ñÓĞ×ã¹»¶àµÄÊı¾İ, ÎªÁË·ÀÖ¹»ñÈ¡Êı¾İÔ½½ç
+                    // åˆ¤æ–­æ˜¯å¦æœ‰è¶³å¤Ÿå¤šçš„æ•°æ®, ä¸ºäº†é˜²æ­¢è·å–æ•°æ®è¶Šç•Œ
                     if( len < receive_len - i -3 ){
 
-                        // »¹Ô­ÏßËÙ¶È
+                        // è¿˜åŸçº¿é€Ÿåº¦
                         uint8_t vel_low = receive_buf[i+4];
                         uint8_t vel_high = receive_buf[i+5];
                         short vel = vel_high<<8|vel_low;
                         float velocity = (float)vel/1000;
-                        // »¹Ô­½ÇËÙ¶È
+                        // è¿˜åŸè§’é€Ÿåº¦
                         uint8_t angular_low = receive_buf[i+6];
                         uint8_t angular_high = receive_buf[i+7];
                         short ang = angular_high<<8|angular_low;
                         float angular = (float)ang/1000;
-                        // ÎªÁË±íÊ¾Êı¾İÔÚ´«Êä
+                        // ä¸ºäº†è¡¨ç¤ºæ•°æ®åœ¨ä¼ è¾“
 
-                        // ÎªÁË±íÊ¾Êı¾İÔÚ´«Êä
+                        // ä¸ºäº†è¡¨ç¤ºæ•°æ®åœ¨ä¼ è¾“
 //                        HAL_GPIO_TogglePin(BUZZER_PORT,BUZZER_PIN);
                         if(receive_buf[i+8] == 0xad) {
                             HAL_GPIO_TogglePin(LED_PORT, LED_PIN);
@@ -231,31 +226,31 @@ void common_uart_idle_callback(uint8_t receive_buf[],uint16_t receive_len){
                         }
                     }
                 }else if(type == 0x06){
-                    // »ñÈ¡Êı¾İ³¤¶È
+                    // è·å–æ•°æ®é•¿åº¦
                     uint8_t len = receive_buf[i+3];
-                    // ÅĞ¶ÏÊÇ·ñÓĞ×ã¹»¶àµÄÊı¾İ, ÎªÁË·ÀÖ¹»ñÈ¡Êı¾İÔ½½ç
+                    // åˆ¤æ–­æ˜¯å¦æœ‰è¶³å¤Ÿå¤šçš„æ•°æ®, ä¸ºäº†é˜²æ­¢è·å–æ•°æ®è¶Šç•Œ
                     if( len < receive_len - i -3 ) {
 
                         float ratio = 10;
-                        // »¹Ô­KP
+                        // è¿˜åŸKP
                         uint8_t kp_l = receive_buf[i + 4];
                         uint8_t kp_h = receive_buf[i + 5];
                         short p = kp_h << 8 | kp_l;
                         float kp = (float) p / ratio;
-                        // »¹Ô­KI
+                        // è¿˜åŸKI
                         uint8_t ki_l = receive_buf[i + 6];
                         uint8_t ki_h = receive_buf[i + 7];
                         short ki_ = ki_h << 8 | ki_l;
                         float ki = (float) ki_ / ratio;
 
-                        // »¹Ô­KI
+                        // è¿˜åŸKI
                         uint8_t kd_l = receive_buf[i + 8];
                         uint8_t kd_h = receive_buf[i + 9];
                         unsigned short kd_ = kd_h << 8 | kd_l;
-                        // ÎªÁË±íÊ¾Êı¾İÔÚ´«Êä
+                        // ä¸ºäº†è¡¨ç¤ºæ•°æ®åœ¨ä¼ è¾“
 
                         float kd = (float) kd_ / ratio;
-                        // ÎªÁË±íÊ¾Êı¾İÔÚ´«Êä
+                        // ä¸ºäº†è¡¨ç¤ºæ•°æ®åœ¨ä¼ è¾“
                         if(receive_buf[i+10] == 0xad){
                             car.updatePID(kp,ki,kd);
                             HAL_GPIO_TogglePin(LED_PORT, LED_PIN);
@@ -276,9 +271,9 @@ void common_uart_idle_callback(uint8_t receive_buf[],uint16_t receive_len){
 
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 {
-    // ÅĞ¶Ï´®¿Ú1µÄÖĞ¶Ï´¦ÀíÂß¼­
+    // åˆ¤æ–­ä¸²å£1çš„ä¸­æ–­å¤„ç†é€»è¾‘
     if(huart->Instance == USART2){
-        // ÇĞ»»ledµÆµÄ×´Ì¬
+        // åˆ‡æ¢ledç¯çš„çŠ¶æ€
         HAL_GPIO_TogglePin(GPIOE,GPIO_PIN_10);
         uint8_t key = buffer[0];
 
@@ -299,24 +294,24 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
                 car.updateVel(-0.2,0,0);
                 break;
 
-            // Âó¿ËÄÈÄ·ÂÖ
+            // éº¦å…‹å¨œå§†è½®
             case 0x41:
-                car.updateVel(0.2,0.2,0); // ×óÇ°·½
+                car.updateVel(0.2,0.2,0); // å·¦å‰æ–¹
                 break;
             case 0x42:
-                car.updateVel(0,0.2,0); // Ë®Æ½Ïò×ó
+                car.updateVel(0,0.2,0); // æ°´å¹³å‘å·¦
                 break;
             case 0x43:
-                car.updateVel(0.2,-0.2,0); // ÓÒÇ°·½
+                car.updateVel(0.2,-0.2,0); // å³å‰æ–¹
                 break;
             case 0x44:
-                car.updateVel(-0.2,0.2,0); // ×óºó·½
+                car.updateVel(-0.2,0.2,0); // å·¦åæ–¹
                 break;
             case 0x45:
-                car.updateVel(0,-0.2,0); // Ë®Æ½ÏòÓÒ
+                car.updateVel(0,-0.2,0); // æ°´å¹³å‘å³
                 break;
             case 0x46:
-                car.updateVel(-0.2,-0.2,0); // ÓÒºó·½
+                car.updateVel(-0.2,-0.2,0); // å³åæ–¹
                 break;
             default:
                 car.updateVel(0,0,0);
