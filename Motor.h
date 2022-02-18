@@ -1,7 +1,3 @@
-//
-// Created by Kaijun on 2020/9/11.
-//
-
 #ifndef HEIMAROBOTV4_MOTOR_H
 #define HEIMAROBOTV4_MOTOR_H
 
@@ -10,14 +6,14 @@
 class Motor {
 public:
     /**
-     * µç»ú
-     * @param portA  ¿ØÖÆÕı·´×ª
-     * @param pinA ¿ØÖÆÕı·´×ª
-     * @param portB ¿ØÖÆÕı·´×ª
-     * @param pinB ¿ØÖÆÕı·´×ª
-     * @param tim   ¿ØÖÆPWMµÄ
-     * @param channel   ¶¨Ê±Æ÷Í¨µÀ
-     * @param direction  ºóĞø·½±ãµ÷Õûµç»úµÄ×ª¶¯·½Ïò
+     * ç”µæœº
+     * @param portA  æ§åˆ¶æ­£åè½¬
+     * @param pinA æ§åˆ¶æ­£åè½¬
+     * @param portB æ§åˆ¶æ­£åè½¬
+     * @param pinB æ§åˆ¶æ­£åè½¬
+     * @param tim   æ§åˆ¶PWMçš„
+     * @param channel   å®šæ—¶å™¨é€šé“
+     * @param direction  åç»­æ–¹ä¾¿è°ƒæ•´ç”µæœºçš„è½¬åŠ¨æ–¹å‘
      */
     Motor(GPIO_TypeDef *portA, uint16_t pinA,GPIO_TypeDef *portB, uint16_t pinB, TIM_HandleTypeDef *tim,uint16_t channel,int direction);
     // A_PORT A_PIN
