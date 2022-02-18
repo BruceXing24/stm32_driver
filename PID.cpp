@@ -1,6 +1,3 @@
-//
-// Created by Kaijun on 2020/9/11.
-//
 #include "PID.h"
 #include <cstdio>
 
@@ -11,16 +8,16 @@ PID::PID(float kp, float ki, float kd) {
 }
 
 float PID::compute(float target, float current) {
-    // ¼ÆËãÎó²î
+    // è®¡ç®—è¯¯å·®
     float error = target - current;
-    // Îó²îµÄÀÛ¼Æ
+    // è¯¯å·®çš„ç´¯è®¡
     intergral +=error;
-    // ±¾´ÎÎó²îºÍÉÏÒ»´ÎÎó²îµÄ²îÒì
+    // æœ¬æ¬¡è¯¯å·®å’Œä¸Šä¸€æ¬¡è¯¯å·®çš„å·®å¼‚
     derivative = error - prevError;
 
-    // Ì×ÓÃpidµÄ¹«Ê½
+    // å¥—ç”¨pidçš„å…¬å¼
     pwm += kp*error + ki*intergral + kd*derivative;
-    // ¼ÇÂ¼ÉÏÒ»´ÎµÄÎó²î
+    // è®°å½•ä¸Šä¸€æ¬¡çš„è¯¯å·®
     prevError = error;
 
     return pwm;
