@@ -1,65 +1,58 @@
-//
-// Created by Kaijun on 2020/9/13.
-//
-
 #include "common_uart.h"
-//
-// Created by Kaijun on 2020/6/8.
-//
 #include "common_uart.h"
 #include <string.h>
 #include <stdio.h>
 #include "stm32f1xx_hal.h"
 
-// ¶¨Òå»º³åÇøµÄ´óĞ¡
+// å®šä¹‰ç¼“å†²åŒºçš„å¤§å°
 const uint32_t BUFFER_SIZE = 255;
-// ÉùÃ÷»º³åÇø
+// å£°æ˜ç¼“å†²åŒº
 static uint8_t uart_rx_buff[255];
 /**
- * ´®¿ÚµÄ³õÊ¼»¯²Ù×÷
+ * ä¸²å£çš„åˆå§‹åŒ–æ“ä½œ
  */
 void common_uart_init(){
-    // ¿ªÆôDMA½ÓÊÕÊı¾İ
+    // å¼€å¯DMAæ¥æ”¶æ•°æ®
     HAL_UART_Receive_DMA(&huart1, (uint8_t*)uart_rx_buff, BUFFER_SIZE);
-    // ¿ªÆô¿ÕÏĞÖĞ¶Ï´¦Àí
+    // å¼€å¯ç©ºé—²ä¸­æ–­å¤„ç†
     __HAL_UART_ENABLE_IT(&huart1, UART_IT_IDLE);
-    // ¿ªÆôÍ¨ĞÅÒì³£´¦Àí
+    // å¼€å¯é€šä¿¡å¼‚å¸¸å¤„ç†
     __HAL_UART_ENABLE_IT(&huart1,UART_IT_ERR);
 }
 
 /**
- * ĞèÒª½«Õâ¸öº¯Êı·Åµ½stm32f1xx_it.c ÎÄ¼şÖĞµÄvoid USART1_IRQHandler(void)º¯ÊıÖĞµ÷ÓÃ
+ * éœ€è¦å°†è¿™ä¸ªå‡½æ•°æ”¾åˆ°stm32f1xx_it.c æ–‡ä»¶ä¸­çš„void USART1_IRQHandler(void)å‡½æ•°ä¸­è°ƒç”¨
  * @param huart1
  */
 void common_uart_idle_handle(UART_HandleTypeDef* huart1){
 
     if(USART1 == huart1->Instance)
-    {	// ÅĞ¶ÏÊÇ·ñÊÇ¿ÕÏĞÖĞ¶Ï
+    {	// åˆ¤æ–­æ˜¯å¦æ˜¯ç©ºé—²ä¸­æ–­
         if (RESET != __HAL_UART_GET_FLAG(huart1, UART_FLAG_IDLE)) {
-            // ¼ÆËã½ÓÊÕµ½µÄÊı¾İ³¤¶È
+            // è®¡ç®—æ¥æ”¶åˆ°çš„æ•°æ®é•¿åº¦
             uint32_t data_length = BUFFER_SIZE - __HAL_DMA_GET_COUNTER(&hdma_usart1_rx);
             __HAL_UART_CLEAR_IDLEFLAG(huart1);
-            // Í£Ö¹±¾´ÎDMA´«Êä
+            // åœæ­¢æœ¬æ¬¡DMAä¼ è¾“
             HAL_UART_DMAStop(huart1);
-            // ½«Êı¾İ¶ª¸øÍâ²¿È¥´¦Àí
+            // å°†æ•°æ®ä¸¢ç»™å¤–éƒ¨å»å¤„ç†
             while (HAL_UART_Receive_DMA(huart1, uart_rx_buff, BUFFER_SIZE) != HAL_OK) {
                 huart1->RxState = HAL_UART_STATE_READY;
                 __HAL_UNLOCK(huart1);
             }
 
-            // Êı¾İ´¦ÀíµÄ»Øµ÷
+            // æ•°æ®å¤„ç†çš„å›è°ƒ
             common_uart_idle_callback(uart_rx_buff,data_length);
         }
     }
 }
 
 /**
- * ½«Êı¾İÊ¹ÓÃDMAµÄ·½Ê½·¢ËÍ³öÈ¥
+ * å°†æ•°æ®ä½¿ç”¨DMAçš„æ–¹å¼å‘é€å‡ºå»
  * @param data
  * @param size
  */
 void common_uart_send(uint8_t* data ,uint16_t size){
-    // Ö±µ½DMA¿ÕÏĞ,²Å½øĞĞÊı¾İµÄ·¢ËÍ
+    // ç›´åˆ°DMAç©ºé—²,æ‰è¿›è¡Œæ•°æ®çš„å‘é€
 /*    while (HAL_UART_GetState(&huart1) == HAL_UART_STATE_BUSY_TX_RX);
 
     while (HAL_UART_Transmit_DMA(&huart1, data, size) != HAL_OK);*/
@@ -71,7 +64,7 @@ void common_uart_send(uint8_t* data ,uint16_t size){
 }
 
 
-/* ÖĞ¶Ï´íÎó´¦Àíº¯Êı£¬ÔÚ´Ë´¦Àíoverrun´íÎó */
+/* ä¸­æ–­é”™è¯¯å¤„ç†å‡½æ•°ï¼Œåœ¨æ­¤å¤„ç†overruné”™è¯¯ */
 void HAL_UART_ErrorCallback1(UART_HandleTypeDef *huart)
 {
     if(__HAL_UART_GET_FLAG(huart,UART_FLAG_PE) != RESET)
